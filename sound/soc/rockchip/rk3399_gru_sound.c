@@ -50,12 +50,12 @@ static const struct snd_soc_dapm_widget rockchip_dapm_widgets[] = {
 };
 
 static const struct snd_soc_dapm_route rockchip_dapm_routes[] = {
-	/* Input Lines */
+	// Input Lines //
 	{"MIC", NULL, "Headset Mic"},
 	{"DMIC1L", NULL, "Int Mic"},
 	{"DMIC1R", NULL, "Int Mic"},
 
-	/* Output Lines */
+	// Output Lines //
 	{"Headphones", NULL, "HPL"},
 	{"Headphones", NULL, "HPR"},
 	{"Speakers", NULL, "Speaker"},
@@ -68,6 +68,7 @@ static const struct snd_kcontrol_new rockchip_controls[] = {
 	SOC_DAPM_PIN_SWITCH("Int Mic"),
 };
 
+/*
 static int rockchip_sound_max98357a_hw_params(struct snd_pcm_substream *substream,
 			     struct snd_pcm_hw_params *params)
 {
@@ -75,7 +76,7 @@ static int rockchip_sound_max98357a_hw_params(struct snd_pcm_substream *substrea
 	unsigned int mclk;
 	int ret;
 
-	/* max98357a supports these sample rates */
+	// max98357a supports these sample rates //
 	switch (params_rate(params)) {
 	case 8000:
 	case 16000:
@@ -98,6 +99,7 @@ static int rockchip_sound_max98357a_hw_params(struct snd_pcm_substream *substrea
 
 	return 0;
 }
+*/
 
 static int rockchip_sound_rt5514_hw_params(struct snd_pcm_substream *substream,
 			     struct snd_pcm_hw_params *params)
@@ -125,12 +127,13 @@ static int rockchip_sound_rt5514_hw_params(struct snd_pcm_substream *substream,
 		return ret;
 	}
 
-	/* Wait for DMIC stable */
+	// Wait for DMIC stable //
 	msleep(rt5514_dmic_delay);
 
 	return 0;
 }
 
+/*
 static int rockchip_sound_da7219_hw_params(struct snd_pcm_substream *substream,
 			     struct snd_pcm_hw_params *params)
 {
@@ -139,7 +142,7 @@ static int rockchip_sound_da7219_hw_params(struct snd_pcm_substream *substream,
 	struct snd_soc_dai *codec_dai = rtd->codec_dai;
 	int mclk, ret;
 
-	/* in bypass mode, the mclk has to be one of the frequencies below */
+	// in bypass mode, the mclk has to be one of the frequencies below //
 	switch (params_rate(params)) {
 	case 8000:
 	case 16000:
@@ -182,14 +185,16 @@ static int rockchip_sound_da7219_hw_params(struct snd_pcm_substream *substream,
 
 	return 0;
 }
+*/
 
+/*
 static int rockchip_sound_da7219_init(struct snd_soc_pcm_runtime *rtd)
 {
 	struct snd_soc_codec *codec = rtd->codec_dais[0]->codec;
 	struct snd_soc_dai *codec_dai = rtd->codec_dai;
 	int ret;
 
-	/* We need default MCLK and PLL settings for the accessory detection */
+	// We need default MCLK and PLL settings for the accessory detection //
 	ret = snd_soc_dai_set_sysclk(codec_dai, 0, 12288000,
 				     SND_SOC_CLOCK_IN);
 	if (ret < 0) {
@@ -203,7 +208,7 @@ static int rockchip_sound_da7219_init(struct snd_soc_pcm_runtime *rtd)
 		return ret;
 	}
 
-	/* Enable Headset and 4 Buttons Jack detection */
+	// Enable Headset and 4 Buttons Jack detection //
 	ret = snd_soc_card_jack_new(rtd->card, "Headset Jack",
 				    SND_JACK_HEADSET | SND_JACK_LINEOUT |
 				    SND_JACK_BTN_0 | SND_JACK_BTN_1 |
@@ -227,35 +232,38 @@ static int rockchip_sound_da7219_init(struct snd_soc_pcm_runtime *rtd)
 
 	return 0;
 }
+*/
 
+/*
 static struct snd_soc_ops rockchip_sound_max98357a_ops = {
 	.hw_params = rockchip_sound_max98357a_hw_params,
 };
+*/
 
 static struct snd_soc_ops rockchip_sound_rt5514_ops = {
 	.hw_params = rockchip_sound_rt5514_hw_params,
 };
 
+/*
 static struct snd_soc_ops rockchip_sound_da7219_ops = {
 	.hw_params = rockchip_sound_da7219_hw_params,
 };
+*/
 
 enum {
-	DAILINK_MAX98357A,
-	DAILINK_RT5514,
-	DAILINK_DA7219,
 	DAILINK_RT5514_DSP,
 };
 
-#define DAILINK_ENTITIES	(DAILINK_DA7219 + 1)
+#define DAILINK_ENTITIES	1
 
 static struct snd_soc_dai_link rockchip_dailinks[] = {
+/*
 	[DAILINK_MAX98357A] = {
 		.name = "MAX98357A",
 		.stream_name = "MAX98357A PCM",
 		.codec_dai_name = "HiFi",
 		.ops = &rockchip_sound_max98357a_ops,
-		/* set max98357a as slave */
+		// set max98357a as slave //
 		.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF |
 			SND_SOC_DAIFMT_CBS_CFS,
 	},
@@ -264,7 +272,7 @@ static struct snd_soc_dai_link rockchip_dailinks[] = {
 		.stream_name = "RT5514 PCM",
 		.codec_dai_name = "rt5514-aif1",
 		.ops = &rockchip_sound_rt5514_ops,
-		/* set rt5514 as slave */
+		// set rt5514 as slave //
 		.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF |
 			SND_SOC_DAIFMT_CBS_CFS,
 	},
@@ -274,11 +282,12 @@ static struct snd_soc_dai_link rockchip_dailinks[] = {
 		.codec_dai_name = "da7219-hifi",
 		.init = rockchip_sound_da7219_init,
 		.ops = &rockchip_sound_da7219_ops,
-		/* set da7219 as slave */
+		// set da7219 as slave //
 		.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF |
 			SND_SOC_DAIFMT_CBS_CFS,
 	},
-	/* RT5514 DSP for voice wakeup via spi bus */
+*/
+	// RT5514 DSP for voice wakeup via spi bus //
 	[DAILINK_RT5514_DSP] = {
 		.name = "RT5514 DSP",
 		.stream_name = "Wake on Voice",
@@ -332,10 +341,6 @@ static int rockchip_sound_probe(struct platform_device *pdev)
 		}
 	}
 
-	/**
-	 * To acquire the spi driver of the rt5514 and set the dai-links names
-	 * for soc_bind_dai_link
-	 */
 	drv = driver_find("rt5514", &spi_bus_type);
 	if (!drv) {
 		dev_err(&pdev->dev, "Can not find the rt5514 driver at the spi bus\n");
@@ -348,7 +353,7 @@ static int rockchip_sound_probe(struct platform_device *pdev)
 		return -ENODEV;
 	}
 
-	/* Set DMIC delay */
+	// Set DMIC delay //
 	ret = device_property_read_u32(&pdev->dev, "dmic-delay",
 					&rt5514_dmic_delay);
 	if (ret) {

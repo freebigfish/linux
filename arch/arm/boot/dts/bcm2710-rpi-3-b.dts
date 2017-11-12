@@ -123,12 +123,24 @@
 	pinctrl-0 = <&spi0_pins &spi0_cs_pins>;
 	cs-gpios = <&gpio 8 1>, <&gpio 7 1>;
 
+/*
 	spidev0: spidev@0{
 		compatible = "spidev";
-		reg = <0>;	/* CE0 */
+		reg = <0>;	
 		#address-cells = <1>;
 		#size-cells = <0>;
 		spi-max-frequency = <125000000>;
+	};
+*/
+     wacky_spi_audio: spidev@0{
+		compatible = "realtek,rt5514";
+		reg = <0>;	
+		interrupt-paraent = <&gpio>;
+		interrupts = <2 12>;
+		#address-cells = <1>;
+		#size-cells = <0>;
+		spi-max-frequency = <125000000>;
+		wakeup-source;
 	};
 
 	spidev1: spidev@1{
@@ -183,6 +195,14 @@
 	pinctrl-names = "default";
 	pinctrl-0 = <&audio_pins>;
 };
+
+&sound {
+         compatible = "rockchip,rk3399-gru-sound";
+                       rockchip,cpu = <&i2s>;
+                       rockchip,codec = < &wacky_spi_audio >;
+                       status = "okay";
+                };
+
 
 / {
 	chosen {

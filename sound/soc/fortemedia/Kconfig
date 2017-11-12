@@ -1,0 +1,6 @@
+config SND_SOC_IM501_SOUND
+	tristate "ASoC support for im501 with ForteMedia firefly boards"
+	depends on GPIOLIB && SPI
+	select SND_SOC_IM501_SPI
+	help
+	  Say Y or M here if you want to add support for fortemedia im501 

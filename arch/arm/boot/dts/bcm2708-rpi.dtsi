@@ -91,9 +91,19 @@
 		};
 
 		/* External sound card */
+		/* change it for im501 by leo */
+		
 		sound: sound {
 			status = "disabled";
 		};
+		/*
+		sound: sound {
+			compatible = "rockchip,rk3399-gru-sound";
+			rockchip,cpu = <&i2s0>;
+			rockchip,codec = < &headsetcodec >;
+			status = "disabled";
+		};*/
+
 
 	};
 

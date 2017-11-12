@@ -29,16 +29,16 @@
 #include <sound/pcm.h>
 #include <sound/pcm_params.h>
 #include <sound/soc.h>
-#include "rockchip_i2s.h"
-#include "../codecs/da7219.h"
-#include "../codecs/da7219-aad.h"
+//#include "rockchip_i2s.h"
+//#include "../codecs/da7219.h"
+//#include "../codecs/da7219-aad.h"
 #include "../codecs/rt5514.h"
 
 #define DRV_NAME "rk3399-gru-sound"
 
 #define SOUND_FS	256
 
-static unsigned int dmic_wakeup_delay;
+unsigned int rt5514_dmic_delay;
 
 static struct snd_soc_jack rockchip_sound_jack;
 
@@ -128,7 +128,7 @@ static int rockchip_sound_rt5514_hw_params(struct snd_pcm_substream *substream,
 	}
 
 	// Wait for DMIC stable //
-	msleep(dmic_wakeup_delay);
+	msleep(rt5514_dmic_delay);
 
 	return 0;
 }
